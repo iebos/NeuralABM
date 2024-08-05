@@ -2,12 +2,20 @@ Data:
   synthetic_data:
 
     # ODE model parameters
+    k_S: 0.4
     k_E:  3.4
+    k_I:  1.0
     k_R: 0.8
+    k_SY:  0.5
+    k_H:  0.01
+    k_C:  0.5
     k_D:  0.3
+    k_CT:  0.01
+    k_q:  10.25
+    k_Q: 1.2
 
     # Number of steps to run
-    num_steps: 302 #was 200 before
+    num_steps: 302 #200 #was 200 before
 
     # Discard an initialisation period
     burn_in: 10
@@ -33,6 +41,6 @@ Training:
     name: MSELoss
     kwargs:
       reduction: sum
-  to_learn: [k_E, k_R, k_D]
+  to_learn: [ k_S, k_E, k_I, k_R, k_SY, k_H, k_C, k_D, k_CT]
   device: cpu
   num_threads: ~

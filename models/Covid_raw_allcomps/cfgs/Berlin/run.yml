@@ -1,0 +1,50 @@
+paths:
+  model_note: Berlin
+perform_sweep: True
+parameter_space:
+  seed: !sweep
+    default: 30
+    range: [5] #was 3 before. shouldnt have to be equal to nr of pars right?
+  num_epochs: 2000
+  write_start: 1
+  write_every: 10
+  Covid_raw:
+    Data:
+      load_from_dir: data/Covid_raw/Berlin_data/data.csv
+      time_dependent_parameters:
+        k_E:
+          - [ 0, 10 ] # Feb 16 to Mar 13 [0, 10, 19, 64, 104, 182, 242, 266, 286, 292, 302] [0, 10, 19, 64, 104, 182, 242, 266, 286, 292, 302, 452]
+          - [ 10, 19] # Mar 13 to Mar 22
+          - [ 19, 64 ] # Mar 22 to May 6
+          - [ 64, 104 ] # May 6 to June 15
+          - [ 104, 182 ] # June 15 to Sep 3
+          - [ 182, 242 ] # Mar 22 to May 6
+          - [ 242, 266 ] # May 6 to June 15
+          - [ 266, 286 ] # June 15 to Sep 3
+          - [ 286, 292 ] # May 6 to June 15
+          - [ 292, ~ ] # June 15 to Sep 3
+      synthetic_data:
+        dt: 0.1
+      training_data_size: !slice [0, 302] #was 200 before
+    NeuralNet:
+      num_layers: 5 #does this have to be set to [60] too?
+      nodes_per_layer:
+        default: 30
+      activation_funcs:
+        default: sigmoid
+        layer_specific:
+          -1: abs
+      prior:
+        distribution: uniform
+        parameters:
+          lower: 0
+          upper: 5
+      learning_rate: 0.002
+      optimizer: Adam
+    Training:
+      batch_size: 302 #was 200 before
+      Berlin_data_loss: True
+      loss_function:
+        name: MSELoss
+        kwargs:
+          reduction: none

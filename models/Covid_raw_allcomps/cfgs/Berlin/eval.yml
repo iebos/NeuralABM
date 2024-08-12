@@ -163,7 +163,7 @@ densities:
       cfg:
         path: ../../cfg
         transform:
-          - getitem: [!dag_prev , 'Covid_raw']
+          - getitem: [!dag_prev , 'Covid_raw_allcomps']
         subspace:
           seed: [0]
   transform:

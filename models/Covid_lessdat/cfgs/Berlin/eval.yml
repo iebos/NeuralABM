@@ -4,8 +4,8 @@
     set_ticks:
       x:
         major:
-          locs: [0, 10, 19, 64, 104, 182, 242, 266, 286, 292, 302, 454] #[ 0, 26, 35, 80, 120, 200, 254 ]
-          labels: [ 'Mar 3', '', 'Mar 13–22', 'May 6', 'June 15', 'Sep 3', 'Nov 2', 'Nov 26', '', 'Dec 16-22', 'Jan 1', 'May 30' ]
+          locs: [ 0, 26, 35, 80, 120, 200, 254 ]
+          labels: [ 'Feb 16', '', 'Mar 13–22', 'May 6', 'June 15', 'Sep 3', 'Oct 27' ]
           ha: right
           rotation: 45
     call:
@@ -15,124 +15,66 @@
           alpha: 0.1
           zorder: -1
           xmin: 0
-          xmax: 10
+          xmax: 26
           lw: 0
         - function: [ matplotlib.pyplot, axvspan ]
           color: !dag_result c_pink
           alpha: 0.3
           zorder: -1
-          xmin: 10
-          xmax: 19
+          xmin: 26
+          xmax: 35
           lw: 0
         - function: [ matplotlib.pyplot, axvspan ]
           color: !dag_result c_pink
           alpha: 0.6
           zorder: -1
-          xmin: 19
-          xmax: 64
+          xmin: 35
+          xmax: 80
           lw: 0
         - function: [ matplotlib.pyplot, axvspan ]
           color: !dag_result c_pink
           alpha: 0.4
           zorder: -1
-          xmin: 64
-          xmax: 104
+          xmin: 80
+          xmax: 120
           lw: 0
-        - function: [ matplotlib.pyplot, axvspan ] #[0, 10, 19, 64, 104, 182, 242, 266, 286, 292, 302, 454]
+        - function: [ matplotlib.pyplot, axvspan ]
           color: !dag_result c_pink
           alpha: 0.2
           zorder: -1
-          xmin: 104
-          xmax: 182
-          lw: 0
-        - function: [ matplotlib.pyplot, axvspan ]
-          color: !dag_result c_pink
-          alpha: 0.1
-          zorder: -1
-          xmin: 182
-          xmax: 242
-          lw: 0
-        - function: [ matplotlib.pyplot, axvspan ]
-          color: !dag_result c_pink
-          alpha: 0.1
-          zorder: -1
-          xmin: 242
-          xmax: 266
-          lw: 0
-        - function: [ matplotlib.pyplot, axvspan ]
-          color: !dag_result c_pink
-          alpha: 0.1
-          zorder: -1
-          xmin: 286
-          xmax: 292
-          lw: 0
-        - function: [ matplotlib.pyplot, axvspan ]
-          color: !dag_result c_pink
-          alpha: 0.1
-          zorder: -1
-          xmin: 292
-          xmax: 302
+          xmin: 120
+          xmax: 200
           lw: 0
         - function: [ matplotlib.pyplot, axvspan ]
           color: !dag_result c_darkblue
           alpha: 0.1
           zorder: -1
-          xmin: 302
-          xmax: 454
+          xmin: 200
+          xmax: 254
           lw: 0
     set_hv_lines:
       vlines:
-        - pos: 10
+        - pos: 26
           linestyle: dotted
           c: !dag_result c_darkgrey
           lw: 0.5
           zorder: -1
-        - pos: 19
+        - pos: 35
           linestyle: dotted
           c: !dag_result c_darkgrey
           lw: 0.5
           zorder: -1
-        - pos: 64
+        - pos: 80
           linestyle: dotted
           c: !dag_result c_darkgrey
           lw: 0.5
           zorder: -1
-        - pos: 104
+        - pos: 120
           linestyle: dotted
           c: !dag_result c_darkgrey
           lw: 0.5
           zorder: -1
-        - pos: 182
-          linestyle: dotted #[0, 10, 19, 64, 104, 182, 242, 266, 286, 292, 302, 452]
-          c: !dag_result c_darkgrey
-          lw: 0.5
-          zorder: -1
-        - pos: 242
-          linestyle: dotted
-          c: !dag_result c_darkgrey
-          lw: 0.5
-          zorder: -1
-        - pos: 266
-          linestyle: dotted
-          c: !dag_result c_darkgrey
-          lw: 0.5
-          zorder: -1
-        - pos: 286
-          linestyle: dotted
-          c: !dag_result c_darkgrey
-          lw: 0.5
-          zorder: -1
-        - pos: 292
-          linestyle: dotted
-          c: !dag_result c_darkgrey
-          lw: 0.5
-          zorder: -1
-        - pos: 302
-          linestyle: dotted
-          c: !dag_result c_darkgrey
-          lw: 0.5
-          zorder: -1
-        - pos: 454
+        - pos: 200
           linestyle: solid
           c: !dag_result c_darkgrey
           lw: 0.5
@@ -149,7 +91,7 @@ densities:
   dag_options:
     define:
       n_samples: 10 #was 1000 before
-      kind: !range [4]
+      kind: !range [8]
   select_and_combine:
     fields:
       parameters:
@@ -157,13 +99,14 @@ densities:
         transform: [.data]
       loss:
         path: loss
+        transform: [neg_exp]
       true_data:
         path: true_counts
         transform: [.data]
       cfg:
         path: ../../cfg
         transform:
-          - getitem: [!dag_prev , 'Covid_raw']
+          - getitem: [!dag_prev , 'Covid_lessdat']
         subspace:
           seed: [0]
   transform:
@@ -197,26 +140,43 @@ densities:
     - .isel: [ !dag_prev , { 'sample': !dag_tag sample_idx } ]
     - .sum: [ !dag_prev ]
     - div: [ !dag_node -2, !dag_prev ]
+#    - flatten_dims: [ !dag_tag loss ]
+#      kwargs: { dims: { sample: [ seed, batch ] } }
+#    - .isel: [ !dag_prev , { 'sample': !dag_tag sample_idx } ]
+#    - .sum: [ !dag_prev ]
+#    - div: [ !dag_node -2, !dag_prev ]
 
     # Copy the loss for each parameter
-    - Covid_raw_densities_from_joint: [!dag_tag parameters_flattened, !dag_prev ]
+    - Covid_densities_from_joint: [!dag_tag parameters_flattened, !dag_prev ]
       kwargs:
         true_counts: !dag_tag true_data_flattened
         cfg: !dag_tag cfg_flattened
+        combine:
+          quarantined: [quarantine_S, quarantine_E, quarantine_I]
+        drop:
+          - contact_traced
+          - deceased
       file_cache:
         read: True
         write: True
       tag: densities
     - getitem: [!dag_prev , 'mean']
+    - Covid_densities_residuals: [!dag_prev ]
+      kwargs:
+        train_cut: 200
+      tag: residuals
     - .sel: [!dag_tag densities , {type: [prediction_mean, true_counts]}]
+    - mul: [!dag_prev , 3574608] # Multiply by population of Berlin
     - .isel: [!dag_prev , {kind: !dag_tag kind}]
       tag: data
+  compute_only: [data, residuals]
   x: time
   y: mean
   yerr: std
   hue: type
   sharey: False
   col: kind
+  col_wrap: 3
   helpers:
     set_legend:
       use_legend: True
@@ -237,35 +197,35 @@ true_data:
   universes:
     seed: [0]
   select:
-    data:
+    counts:
       path: true_counts
       transform:
-        - .sel: [!dag_prev , {kind: ['susceptible', 'infected', 'recovered']}]
+        - .sel: [!dag_prev , {kind: ['symptomatic', 'hospitalized', 'critical']}]
         - .squeeze_with_drop: [!dag_prev ]
         - mul: [!dag_prev , 3574608]
         - pd.date_range:
             start: "2020-03-03"
-            end: "2021-05-30" #because two dates are missing: "2020-07-19", "2020-08-02"
+            end: "2020-10-26"
             freq: 'D'
         - .assign_coords: [!dag_node -2, {'time': !dag_prev }]
 
 #  transform:
 #    # Load the cumulative number of infected patients
 #    # Combine counts and cumulative counts
-#    - import_and_call: [pandas, read_csv, 'data/Covid_raw/Berlin_data/data_cumulative.csv']
+#    - import_and_call: [pandas, read_csv, 'data/Covid_lessdat/Berlin_data/data_cumulative.csv']
 #      kwargs: {index_col: 0}
 #    - .to_xarray: [!dag_prev ]
 #    - .coords: [!dag_prev , 'index']
 #    - pd.to_datetime: [!dag_prev ]
 #    - .assign_coords: [!dag_node -3, {index: !dag_prev }]
-#    - .rename: [!dag_prev , {index: time, cumulative_i: cumulative}]
+#    - .rename: [!dag_prev , {index: time, nShowingSymptomsCumulative: cumulative}]
 #    - getitem: [!dag_prev , 'cumulative']
 #    - .expand_dims: [!dag_prev , {kind: ['cumulative']}]
 #    - xr.concat: [[!dag_tag counts, !dag_prev ], 'kind']
 #      tag: data
 #
 #    # Load the RKI data
-#    - import_and_call: [pandas, read_csv, 'data/Covid_raw/Berlin_data/RKI_data.csv']
+#    - import_and_call: [pandas, read_csv, 'data/Covid/Berlin_data/RKI_data.csv']
 #      kwargs: {index_col: 0}
 #    - getitem: [!dag_prev , 'Datum']
 #    - pd.to_datetime: [!dag_prev ]
@@ -297,7 +257,7 @@ true_data:
     set_legend:
       use_legend: True
       title: ~
-      custom_labels: ['S', 'E', 'R', 'cumulative']
+      custom_labels: ['SY', 'H', 'C', 'cumulative']
       ncol: 4
       bbox_to_anchor: [0.03, 1., 1, 0.1]
       gather_from_fig: True
@@ -309,8 +269,8 @@ true_data:
     set_ticks:
       x:
         major:
-          locs: [ 0, 10, 19, 64, 104, 182, 242, 266, 286, 292, 302, 454 ] #[ 0, 26, 35, 80, 120, 200, 254 ]
-          labels: [ 'Mar 3', '', 'Mar 13–22', 'May 6', 'June 15', 'Sep 3', 'Nov 2', 'Nov 26', '', 'Dec 16-22', 'Jan 1', 'May 30' ]
+          locs: ['2020-02-16', '2020-03-13', '2020-03-22','2020-05-06', '2020-06-15', '2020-09-03', '2020-10-27']
+          labels: ['Feb 16', '', 'Mar 13–22', 'May 6', 'Jun 15', 'Sep 3', 'Oct 27']
           rotation: 45
     call:
       functions:
@@ -326,7 +286,7 @@ true_data:
           color: !dag_result c_pink
           alpha: 0.1
           zorder: -1
-          xmin: '2020-03-03'
+          xmin: '2020-02-16'
           xmax: '2020-03-13'
           lw: 0
         - function: [matplotlib.pyplot, axvspan]
@@ -357,48 +317,14 @@ true_data:
           xmin: '2020-06-15'
           xmax: '2020-09-03'
           lw: 0
-        - function: [ matplotlib.pyplot, axvspan ] #'Mar 3', '', 'Mar 13–22', 'May 6', 'June 15', 'Sep 3', 'Nov 2', 'Nov 26', '', 'Dec 16-22', 'Jan 1', 'May 30'
+        - function: [ matplotlib.pyplot, axvspan ]
           color: !dag_result c_lightblue
           alpha: 0.2
           zorder: -1
           xmin: '2020-09-03'
-          xmax: '2020-11-02'
+          xmax: '2020-10-27'
           lw: 0
-        - function: [ matplotlib.pyplot, axvspan ]
-          color: !dag_result c_pink
-          alpha: 0.2
-          zorder: -1
-          xmin: '2020-11-02'
-          xmax: '2020-11-26'
-          lw: 0
-        - function: [ matplotlib.pyplot, axvspan ]
-          color: !dag_result c_pink
-          alpha: 0.2
-          zorder: -1
-          xmin: '2020-11-26'
-          xmax: '2020-12-16'
-          lw: 0
-        - function: [ matplotlib.pyplot, axvspan ]
-          color: !dag_result c_pink
-          alpha: 0.2
-          zorder: -1
-          xmin: '2020-12-16'
-          xmax: '2020-12-22'
-          lw: 0
-        - function: [ matplotlib.pyplot, axvspan ]
-          color: !dag_result c_pink
-          alpha: 0.2
-          zorder: -1
-          xmin: '2020-12-22'
-          xmax: '2021-01-01'
-          lw: 0
-        - function: [ matplotlib.pyplot, axvspan ]
-          color: !dag_result c_lightblue
-          alpha: 0.2
-          zorder: -1
-          xmin: '2021-01-01'
-          xmax: '2021-05-30'
-          lw: 0
+
 # Plot the loss over time
 loss:
   based_on:
@@ -476,15 +402,16 @@ marginals:
       tag: data
   x: x
   y: y
+  hue: type
   col: parameter
-  col_wrap: 3
+  col_wrap: 5
   sharex: False
   sharey: False
   smooth_kwargs:
     enabled: True
     smoothing: 3
+  format_y_label: True
   figsize: [ !dag_result full_width, !dag_result full_width ]
-
 
 
 .plot.facet_grid.hist:

@@ -129,7 +129,7 @@
     - .meta_ops
 
   dag_options:
-    select_path_prefix: &base_path data/Covid_raw_allcomps
+    select_path_prefix: &base_path data/Covid_lessdat
 
 .creator.multiverse:
   based_on:
@@ -225,7 +225,7 @@ densities_from_joint_uni:
     cfg:
       path: ../../cfg
       transform:
-        - getitem: [!dag_prev , 'Covid_raw_allcomps']
+        - getitem: [!dag_prev , 'Covid_lessdat']
   transform:
     # Get n random samples from the parameters
     - .coords: [!dag_tag parameters , 'batch']
@@ -277,7 +277,7 @@ densities_from_joint_mv:
       cfg:
         path: ../../cfg
         transform:
-          - getitem: [!dag_prev , 'Covid_raw_allcomps']
+          - getitem: [!dag_prev , 'Covid_lessdat']
         subspace:
           seed: [ 0 ]
   transform:

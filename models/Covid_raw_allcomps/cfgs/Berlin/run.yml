@@ -10,7 +10,7 @@ parameter_space:
   write_every: 10
   Covid_raw:
     Data:
-      load_from_dir: data/Covid_raw/Berlin_data/data.csv
+      load_from_dir: data/Covid_raw_allcomps/Berlin_data/data.csv
       time_dependent_parameters:
         k_E:
           - [ 0, 10 ] # Feb 16 to Mar 13 [0, 10, 19, 64, 104, 182, 242, 266, 286, 292, 302] [0, 10, 19, 64, 104, 182, 242, 266, 286, 292, 302, 452]

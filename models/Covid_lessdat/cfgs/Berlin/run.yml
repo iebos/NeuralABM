@@ -13,14 +13,14 @@ parameter_space:
       load_from_dir: data/Covid_lessdat/Berlin_data/data.csv
       time_dependent_parameters:
         k_E:
-          - [ 0, 26 ] # Feb 16 to Mar 13
-          - [ 26, 35] # Mar 13 to Mar 22
-          - [ 35, 80 ] # Mar 22 to May 6
-          - [ 80, 120 ] # May 6 to June 15
-          - [ 120, ~ ] # June 15 to Sep 3
+          - [ 0, 10 ] # Feb 16 to Mar 13 #[ 0, 10, 19, 64, 104, 182, 238 ]
+          - [ 10, 19] # Mar 13 to Mar 22
+          - [ 19, 64 ] # Mar 22 to May 6
+          - [ 64, 104 ] # May 6 to June 15
+          - [ 104, ~ ] # June 15 to Sep 3
       synthetic_data:
         dt: 0.1
-      training_data_size: !slice [0, 200]
+      training_data_size: !slice [0, 182]
     NeuralNet:
       num_layers: 3
       nodes_per_layer:

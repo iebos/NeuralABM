@@ -15,7 +15,7 @@ Data:
     k_Q: 1.2
 
     # Number of steps to run
-    num_steps: 200
+    num_steps: 182
 
     # Discard an initialisation period
     burn_in: 10

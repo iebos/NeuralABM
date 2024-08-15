@@ -148,7 +148,7 @@ class Covid_NN:
 
         # Calculate the coefficients of each term in the loss function:
         # \alpha_i^{-1} = \int T_i(t) dt
-        alpha = torch.sum(training_data[:, [0, 4, 7]], dim=0) * self.dt #we only train on susceptible, symptomaic and deceased
+        alpha = torch.sum(training_data[:, [0, 2, 7]], dim=0) * self.dt #we only train on susceptible, symptomaic and deceased
         alpha = torch.where(alpha > 0, alpha, torch.tensor(1.0))
         # self.alpha = alpha (
         #     torch.cat([alpha[0:7], torch.sum(alpha[8:11], 0, keepdim=True)], 0)
@@ -290,13 +290,13 @@ class Covid_NN:
                     ],
                     dim=1,
                 )
-                densities_train = densities[:, [0, 4, 7]]
+                densities_train = densities[:, [0, 2, 7]]
                 loss = (
                     self.alpha
                     * self.loss_function(
                         densities_train,
                         self.training_data[
-                                    batch_idx + 1 : self.batches[batch_no + 1] + 1, [0, 4, 7]]
+                                    batch_idx + 1 : self.batches[batch_no + 1] + 1, [0, 2, 7]]
                     ).sum(dim=0)
                 ).sum()
 

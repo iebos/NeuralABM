@@ -148,6 +148,7 @@ class Covid_NN:
 
         # Calculate the coefficients of each term in the loss function:
         # \alpha_i^{-1} = \int T_i(t) dt
+
         alpha = torch.sum(training_data, dim=0) * self.dt
         alpha = torch.where(alpha > 0, alpha, torch.tensor(1.0))
         self.alpha = (

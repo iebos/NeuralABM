@@ -148,17 +148,15 @@ class Covid_NN:
 
         # Calculate the coefficients of each term in the loss function:
         # \alpha_i^{-1} = \int T_i(t) dt
-        alpha = torch.sum(training_data[:, [0, 2, 7]], dim=0) * self.dt #we only train on susceptible, symptomaic and deceased
+        alpha = torch.sum(training_data, dim=0) * self.dt
         alpha = torch.where(alpha > 0, alpha, torch.tensor(1.0))
-        # self.alpha = alpha (
-        #     torch.cat([alpha[0:7], torch.sum(alpha[8:11], 0, keepdim=True)], 0)
-        # ) ** (-1)
-        ## adjust this part to the new training data
-        self.alpha = alpha ** (-1)
+        self.alpha = (
+            torch.cat([alpha[0:8], torch.sum(alpha[8:12], 0, keepdim=True)], 0)
+        ) ** (-1)
 
         # Reduced data model
-        # for idx in [0, 1, 2, 3, 7]:  # S, E, I, R, Q are dropped
-        #     self.alpha[idx] = 0
+        for idx in [1,3,4,5,6,8]:  # E, R, Sy, H, C, qS, qE, qI are dropped
+            self.alpha[idx] = 0
 
         # Get all the jump points
         self.jump_points = {}
@@ -282,21 +280,30 @@ class Covid_NN:
             densities = torch.stack(densities[1:])
 
             if self.Berlin_data_loss:
-                # take the susceptible, symptomatic and deceased compartments from model and training data
+                # For the Berlin dataset, combine the quarantine compartments and drop the deceased compartment,
+                # which is not present in the ABM data
                 densities = torch.cat(
                     [
-                        densities[:, :7],
-                        torch.sum(densities[:, 8:11], dim=1, keepdim=True),
+                        densities[:, :8],
+                        torch.sum(densities[:, 8:12], dim=1, keepdim=True),
                     ],
                     dim=1,
                 )
-                densities_train = densities[:, [0, 2, 7]]
                 loss = (
                     self.alpha
                     * self.loss_function(
-                        densities_train,
-                        self.training_data[
-                                    batch_idx + 1 : self.batches[batch_no + 1] + 1, [0, 2, 7]]
+                        densities,
+                        torch.cat(
+                            [
+                                self.training_data[
+                                    batch_idx + 1 : self.batches[batch_no + 1] + 1, :8
+                                ],
+                                self.training_data[
+                                    batch_idx + 1 : self.batches[batch_no + 1] + 1, [8]
+                                ],
+                            ],
+                            1,
+                        ),
                     ).sum(dim=0)
                 ).sum()
 

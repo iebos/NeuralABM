@@ -3,9 +3,9 @@ paths:
 perform_sweep: True
 parameter_space:
   seed: !sweep
-    default: 30
+    default: 10
     range: [10]
-  num_epochs: 2000
+  num_epochs: 200
   write_start: 1
   write_every: 10
   Covid:

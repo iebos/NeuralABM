@@ -3,25 +3,21 @@ paths:
 perform_sweep: True
 parameter_space:
   seed: !sweep
-    default: 10
+    default: 5
     range: [10]
   num_epochs: 20
   write_start: 1
   write_every: 10
-  Covid_lessdat:
+  Covid_mob:
     Data:
-      load_from_dir: data/Covid_lessdat/Berlin_data/data.csv
-      time_dependent_parameters:
-        k_E:
-          - [ 0, 10 ] # Feb 16 to Mar 13 #[ 0, 10, 19, 64, 104, 182, 238 ]
-          - [ 10, 19] # Mar 13 to Mar 22
-          - [ 19, 64 ] # Mar 22 to May 6
-          - [ 64, 104 ] # May 6 to June 15
-          - [ 104, 182 ] # June 15 to Sep 3
-          - [ 182, ~ ] # June 15 to Sep 3
+      load_from_dir: data/Covid_mob/Berlin_data/data.csv
+#      time_dependent_parameters:
       synthetic_data:
         dt: 0.1
       training_data_size: !slice [0, 200] #182]
+    Data_weathermob:
+      load_from_dir: data/Covid_mob/Berlin_data/weather_mobility.csv
+      training_data_size: !slice [ 0, 200 ] #182]
     NeuralNet:
       num_layers: 3
       nodes_per_layer:

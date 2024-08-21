@@ -10,7 +10,7 @@ from dantro._import_tools import import_module_from_path
 sys.path.append(up(up(__file__)))
 sys.path.append(up(up(up(__file__))))
 
-Covid = import_module_from_path(mod_path=up(up(__file__)), mod_str="Covid_lessdat")
+Covid = import_module_from_path(mod_path=up(up(__file__)), mod_str="Covid_mob")
 base = import_module_from_path(mod_path=up(up(up(__file__))), mod_str="include")
 
 log = logging.getLogger(__name__)
@@ -37,6 +37,7 @@ class Covid_NN:
         write_every: int = 1,
         write_start: int = 1,
         training_data: torch.Tensor,
+        weathermob_data: torch.Tensor,
         batch_size: int,
         scaling_factors: dict = {},
         **__,
@@ -93,6 +94,9 @@ class Covid_NN:
 
         # Training data
         self.training_data = training_data
+
+        #Weather and mobility data
+        self.weathermob_data = weathermob_data
 
         # Generate the batch ids
         batches = np.arange(0, self.training_data.shape[0], batch_size)
@@ -208,7 +212,8 @@ class Covid_NN:
             current_densities = self.training_data[batch_idx].clone()
             current_densities.requires_grad_(True)
             densities = [current_densities]
-
+            print("let me print something for gods sake")
+            print(predicted_parameters)
             # Integrate the ODE for B steps
             for ele in range(batch_idx + 1, self.batches[batch_no + 1] + 1):
                 # Adjust for time-dependency
@@ -222,17 +227,22 @@ class Covid_NN:
 
                 # Calculate the k_Q parameter from the current CT figures and k_CT estimate
                 k_Q = self.k_q * parameters["k_CT"] * densities[-1][-1]
+                print("k_Q is equaaaaal tooooo", k_Q)
 
+                # Calculate the k_E parameter from weather and mobility data
+             #   k_E = parameters["k_E0"] + parameters["k_E1"] * self.weathermob_data[-1][0]**2 + parameters["k_E2"] * self.weathermob_data[-1][0]**2 * self.weathermob_data[-1][1]
+                k_E = parameters["k_E"] * self.weathermob_data[-1][1]
+                print("k_E is equaaaaal tooooo", k_E)
                 # Solve the ODE
                 densities.append(
                     torch.clip(
                         densities[-1]
                         + torch.stack(
                             [
-                                (-parameters["k_E"] * densities[-1][2] - k_Q)
+                                (-k_E * densities[-1][2] - k_Q)
                                 * densities[-1][0]
                                 + parameters["k_S"] * densities[-1][8],
-                                parameters["k_E"] * densities[-1][0] * densities[-1][2]
+                                k_E * densities[-1][0] * densities[-1][2]
                                 - (parameters["k_I"] + k_Q) * densities[-1][1],
                                 parameters["k_I"] * densities[-1][1]
                                 - (parameters["k_R"] + parameters["k_SY"] + k_Q)

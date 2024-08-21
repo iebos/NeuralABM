@@ -118,7 +118,7 @@ densities:
       cfg:
         path: ../../cfg
         transform:
-          - getitem: [!dag_prev , 'Covid_lessdat']
+          - getitem: [!dag_prev , 'Covid_mob']
         subspace:
           seed: [0]
   transform:

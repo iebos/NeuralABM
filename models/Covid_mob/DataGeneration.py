@@ -50,11 +50,11 @@ def generate_smooth_data(
         if parameters is None
         else parameters[Compartments.susceptible.value]
     )
-    k_E = (
-        torch.tensor(cfg["k_E"], dtype=torch.float)
-        if parameters is None
-        else parameters[Compartments.exposed.value]
-    )
+    # k_E = (
+    #     torch.tensor(cfg["k_E"], dtype=torch.float)
+    #     if parameters is None
+    #     else parameters[Compartments.exposed.value]
+    # )
     k_I = (
         torch.tensor(cfg["k_I"], dtype=torch.float)
         if parameters is None
@@ -103,7 +103,11 @@ def generate_smooth_data(
     for t in range(1, num_steps + burn_in):
         # Get the time-dependent parameters, if given
         k_S_t = k_S[t] if k_S.dim() > 0 else k_S
-        k_E_t = k_E[t] * weathermob_data[t - 1][1] if k_E.dim() > 0 else k_E
+        if parameters is None:
+            k_E_t = k_E0[t] + k_E1[t] * weathermob_data[t - 1][0]**2 + k_E2[t] * weathermob_data[t - 1][0]**2 * weathermob_data[t - 1][1] if k_E0.dim() > 0 else k_E0 + k_E1 * weathermob_data[t - 1][0]**2 + k_E2 * weathermob_data[t - 1][0]**2 * weathermob_data[t - 1][1]
+        else:
+            k_E_t = k_E[t] if k_E.dim() > 0 else k_E
+        #k_E_t =  k_E[t] * weathermob_data[t - 1][0]**2 - k_E[t] * weathermob_data[t - 1][0]**2 * weathermob_data[t - 1][1] if k_E.dim() > 0 else  k_E * weathermob_data[t - 1][0]**2 - k_E * weathermob_data[t - 1][0]**2 * weathermob_data[t - 1][1]
         k_I_t = k_I[t] if k_I.dim() > 0 else k_I
         k_R_t = k_R[t] if k_R.dim() > 0 else k_R
         k_SY_t = k_SY[t] if k_SY.dim() > 0 else k_SY
@@ -230,7 +234,7 @@ def get_data(data_cfg: dict, h5group: h5.Group) -> torch.Tensor:
     dset_true_counts.attrs["dim_names"] = ["time", "kind", "dim_name__0"]
     dset_true_counts.attrs["coords_mode__time"] = "trivial"
     dset_true_counts.attrs["coords_mode__kind"] = "values"
-    dset_true_counts.attrs["coords__kind"] = ["k.name for k in Compartments"]
+    dset_true_counts.attrs["coords__kind"] = [k.name for k in Compartments]
     dset_true_counts.attrs["coords_mode__dim_name__0"] = "trivial"
 
     dset_true_counts[:, :, :] = training_data

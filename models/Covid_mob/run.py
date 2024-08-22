@@ -66,7 +66,7 @@ if __name__ == "__main__":
 
     # Load or generate the training data
     training_data = Covid.get_data(model_cfg["Data"], h5group).to(device)
-
+    print(training_data.shape)
     # Load the weather and mobility data
     import pandas as pd
     weathermob_data = torch.from_numpy(pd.read_csv("data/Covid_mob/Berlin_data/weather_mobility.csv", index_col=0).to_numpy(dtype=float)).float().reshape(-1, 2, 1)

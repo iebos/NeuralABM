@@ -424,7 +424,7 @@ marginals:
       tag: data
   x: x
   y: y
-  hue: type
+#  hue: type
   col: parameter
   col_wrap: 5
   sharex: False
@@ -432,7 +432,7 @@ marginals:
   smooth_kwargs:
     enabled: True
     smoothing: 3
-  format_y_label: True
+#  format_y_label: True
   figsize: [ !dag_result full_width, !dag_result full_width ]
 
 

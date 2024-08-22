@@ -159,7 +159,7 @@ class Covid_NN:
         ) ** (-1)
 
         # Reduced data model
-        for idx in [1, 3, 4, 5, 6, 7, 8]:  # E, R, Sy, H, C, qS, qE, qI are dropped
+        for idx in [0, 1, 3, 4, 5, 6, 7, 8]:  # E, R, Sy, H, C, qS, qE, qI are dropped
             self.alpha[idx] = 0
 
         # Get all the jump points
@@ -227,12 +227,12 @@ class Covid_NN:
 
                 # Calculate the k_Q parameter from the current CT figures and k_CT estimate
                 k_Q = self.k_q * parameters["k_CT"] * densities[-1][-1]
-                print("k_Q is equaaaaal tooooo", k_Q)
+             #   print("k_Q is equaaaaal tooooo", k_Q)
 
                 # Calculate the k_E parameter from weather and mobility data
-             #   k_E = parameters["k_E0"] + parameters["k_E1"] * self.weathermob_data[-1][0]**2 + parameters["k_E2"] * self.weathermob_data[-1][0]**2 * self.weathermob_data[-1][1]
-                k_E = parameters["k_E"] * self.weathermob_data[-1][1]
-                print("k_E is equaaaaal tooooo", k_E)
+                k_E = parameters["k_E0"] + parameters["k_E1"] * self.weathermob_data[ele][0]**2 + parameters["k_E2"] * self.weathermob_data[ele][0]**2 * self.weathermob_data[ele][1]
+             #   k_E = parameters["k_E"] * self.weathermob_data[ele][0]**2 - parameters["k_E"] * self.weathermob_data[ele][0]**2 * self.weathermob_data[ele][1]
+              #  print("k_E is equaaaaal tooooo", k_E)
                 # Solve the ODE
                 densities.append(
                     torch.clip(

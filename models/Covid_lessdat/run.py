@@ -124,6 +124,7 @@ if __name__ == "__main__":
         log.info("   Performing MCMC sampling ... ")
         Covid.perform_sampling(h5file, training_data, model_cfg)
 
+
     log.info("   Simulation run finished.")
     log.info("   Wrapping up ...")
     h5file.close()

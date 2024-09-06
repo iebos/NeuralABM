@@ -3,6 +3,7 @@ from typing import Sequence, Union
 
 import scipy.ndimage
 import xarray as xr
+import numpy as np ###### Added this line
 from dantro.plot.funcs._utils import plot_errorbar
 from dantro.plot.funcs.generic import make_facet_grid_plot
 
@@ -30,6 +31,7 @@ def plot_prob_density(
     add_legend: bool = True,
     smooth_kwargs: dict = {},
     linestyle: Union[str, Sequence] = "solid",
+    show_modes: bool = True, ###### Added this line
     **plot_kwargs,
 ):
     """Probability density plot for estimated parameters, which combines line- and errorband functionality into a
@@ -44,6 +46,7 @@ def plot_prob_density(
     :param hue: (optional) variable to plot onto the hue dimension
     :param label: (optional) label for the plot, if the hue dimension is unused
     :param add_legend: whether to add a legend
+    :param show_modes: whether to show the mode of the distribution ###### Added this line
     :param smooth_kwargs: dictionary for the smoothing settings. Smoothing can be set for all parameters or by parameter
     :param plot_kwargs: passed to the plot function
     """
@@ -60,6 +63,10 @@ def plot_prob_density(
         # If no yerr is given, plot a single line
         if _yerr is None:
             (ebar,) = hlpr.ax.plot(_x, _y, label=_label, **_plot_kwargs)
+            if show_modes: ###### Added this line
+                mode_x, mode_y = _x[_y.argmax()], np.max(_y) ###### Added this line
+                hlpr.ax.scatter(mode_x, mode_y, label="Mode", **plot_kwargs) ###### Added this line
+                hlpr.ax.text(mode_x, mode_y, f"{mode_y:.4f}", fontsize=9, ha='right') ###### Added this line
             return ebar
 
         # Else, plot errorbands
@@ -68,7 +75,16 @@ def plot_prob_density(
             if smooth:
                 _yerr = scipy.ndimage.gaussian_filter1d(_yerr, sigma, **_smooth_kwargs)
 
-            return plot_errorbar(
+            # return plot_errorbar(
+            #     ax=_ax,
+            #     x=_x,
+            #     y=_y,
+            #     yerr=_yerr,
+            #     label=_label,
+            #     fill_between=True,
+            #     **_plot_kwargs,
+            # )
+            handle = plot_errorbar(
                 ax=_ax,
                 x=_x,
                 y=_y,
@@ -77,6 +93,11 @@ def plot_prob_density(
                 fill_between=True,
                 **_plot_kwargs,
             )
+            if show_modes:
+                mode_x, mode_y = _x[_y.argmax()], np.max(_y)
+                hlpr.ax.scatter(mode_x, mode_y, label="Mode", **plot_kwargs)
+                hlpr.ax.text(mode_x, mode_y, f"{mode_y:.4f}", fontsize=9, ha='right')
+            return handle
 
     # Get the dataset and parameter name
     if "parameter" in list(ds.coords):
@@ -109,6 +130,7 @@ def plot_prob_density(
                 _smooth_kwargs=copy.deepcopy(smooth_kwargs.get(pname, smooth_kwargs)),
                 _ax=hlpr.ax,
                 _label=f"{coord}",
+                # show_modes=show_modes, ###### Added this line
                 linestyle=linestyle if isinstance(linestyle, str) else linestyle[i],
                 **plot_kwargs,
             )
@@ -139,6 +161,7 @@ def plot_prob_density(
             _ax=hlpr.ax,
             _smooth_kwargs=copy.deepcopy(smooth_kwargs.get(pname, smooth_kwargs)),
             _label=label,
+            # show_modes=show_modes, ###### Added this line
             linestyle=linestyle,
             **plot_kwargs,
         )

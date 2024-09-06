@@ -3,9 +3,9 @@ paths:
 perform_sweep: True
 parameter_space:
   seed: !sweep
-    default: 10
-    range: [10]
-  num_epochs: 20
+    default: 20
+    range: [5]
+  num_epochs: 200
   write_start: 1
   write_every: 10
   Covid_lessdat:
@@ -18,10 +18,16 @@ parameter_space:
           - [ 19, 64 ] # Mar 22 to May 6
           - [ 64, 104 ] # May 6 to June 15
           - [ 104, 182 ] # June 15 to Sep 3
-          - [ 182, ~ ] # June 15 to Sep 3
+          - [ 182, 200 ]
+          - [ 200, 242 ] # Sep 3 to Oct 29 # this is where you stopped I think, you had 182, ~
+          - [ 242, 266 ] # Oct 29 to Nov 22
+          - [ 266, 286 ] # Nov 22 to Dec 12
+          - [ 286, ~ ]
+#[0, 10, 19, 64, 104, 182, 242, 266, 286, 292, 302, 454] #[ 0, 26, 35, 80, 120, 200, 254 ]
+#          labels: [ 'Mar 3', '', 'Mar 13–22', 'May 6', 'June 15', 'Sep 3', 'Nov 2', 'Nov 26', '', 'Dec 16-22', 'Jan 1', 'May 30' ]
       synthetic_data:
         dt: 0.1
-      training_data_size: !slice [0, 200] #182]
+      training_data_size: !slice [0, 286] # you had 200] #182]
     NeuralNet:
       num_layers: 3
       nodes_per_layer:

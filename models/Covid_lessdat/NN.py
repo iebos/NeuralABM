@@ -232,11 +232,14 @@ class Covid_NN:
                                 (-parameters["k_E"] * densities[-1][2] - k_Q)
                                 * densities[-1][0]
                                 + parameters["k_S"] * densities[-1][8],
+
                                 parameters["k_E"] * densities[-1][0] * densities[-1][2]
                                 - (parameters["k_I"] + k_Q) * densities[-1][1],
+
                                 parameters["k_I"] * densities[-1][1]
                                 - (parameters["k_R"] + parameters["k_SY"] + k_Q)
                                 * densities[-1][2],
+
                                 parameters["k_R"]
                                 * (
                                     densities[-1][2]
@@ -245,25 +248,33 @@ class Covid_NN:
                                     + densities[-1][6]
                                     + densities[-1][10]
                                 ),
+
                                 parameters["k_SY"]
                                 * (densities[-1][2] + densities[-1][10])
                                 - (parameters["k_R"] + parameters["k_H"])
                                 * densities[-1][4],
+
                                 parameters["k_H"] * densities[-1][4]
                                 - (parameters["k_R"] + parameters["k_C"])
                                 * densities[-1][5],
+
                                 parameters["k_C"] * densities[-1][5]
                                 - (parameters["k_R"] + parameters["k_D"])
                                 * densities[-1][6],
+
                                 parameters["k_D"] * densities[-1][6],
+
                                 -parameters["k_S"] * densities[-1][8]
                                 + k_Q * densities[-1][0],
+
                                 -parameters["k_I"] * densities[-1][9]
                                 + k_Q * densities[-1][1],
+
                                 parameters["k_I"] * densities[-1][9]
                                 + k_Q * densities[-1][2]
                                 - (parameters["k_SY"] + parameters["k_R"])
                                 * densities[-1][10],
+
                                 parameters["k_SY"] * densities[-1][2]
                                 - self.k_q
                                 * torch.sum(densities[-1][0:3])

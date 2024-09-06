@@ -189,16 +189,16 @@ def densities_from_joint(
     ).squeeze(["dim_name__0"], drop=True)
 
     # Combine compartments, if given
-    if combine:
-        res = _combine_compartments(res, combine)
-        mode_data = _combine_compartments(mode_data, combine)
-        true_counts = _combine_compartments(true_counts, combine)
-
-    # Drop compartments, if given
-    if drop:
-        res = _drop_compartments(res, drop)
-        mode_data = _drop_compartments(mode_data, drop)
-        true_counts = _drop_compartments(true_counts, drop)
+    # if combine:
+    #     res = _combine_compartments(res, combine)
+    #     mode_data = _combine_compartments(mode_data, combine)
+    #     true_counts = _combine_compartments(true_counts, combine)
+    #
+    # # Drop compartments, if given
+    # if drop:
+    #     res = _drop_compartments(res, drop)
+    #     mode_data = _drop_compartments(mode_data, drop)
+    #     true_counts = _drop_compartments(true_counts, drop)
 
     # Reshape the probability array
     prob = np.reshape(prob.data, (len(prob.coords[sample_dim]), 1, 1, 1))
@@ -217,5 +217,7 @@ def densities_from_joint(
 
     mean = xr.concat([mean, true_counts, mode_data], dim="type")
     std = xr.concat([std, 0 * true_counts, 0 * mode_data], dim="type")
+
+    mean.to_netcdf("densitiesss_mean.nc")
 
     return xr.Dataset(data_vars=dict(mean=mean, std=std))

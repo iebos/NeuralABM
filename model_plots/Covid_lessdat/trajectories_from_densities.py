@@ -219,5 +219,7 @@ def densities_from_joint(
     std = xr.concat([std, 0 * true_counts, 0 * mode_data], dim="type")
 
     mean.to_netcdf("densitiesss_mean.nc")
+    import pandas as pd
+    pd.DataFrame(mode_params).to_csv("params_modee.csv")
 
     return xr.Dataset(data_vars=dict(mean=mean, std=std))

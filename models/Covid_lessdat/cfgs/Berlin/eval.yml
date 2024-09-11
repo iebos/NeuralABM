@@ -4,8 +4,9 @@
     set_ticks:
       x:
         major:
-          locs: [ 0, 10, 19, 64, 104, 182, 202, 244, 254, 271, 292] # 200, 238] #182, 238 ]
-          labels: ['Mar 3', '', 'Mar 13–22', 'May 6', 'June 15', 'Sep 3', '', 'Nov 2-12', 'Nov 29', 'Dec 20'] #''Sep 21', Oct 27' ]#'Sep 3', 'Oct 27' ]
+          locs: [ 0, 10, 19, 64, 104, 182, 202, 244, 254, 271, 349, 387, 405, 423] # 200, 238] #182, 238 ]
+          labels: ['Mar 3', '', 'Mar 13–22', 'May 6', 'June 15', 'Sep 3','Sep 21',
+                    'Oct 22', 'Nov 12', 'Nov 29', 'Dec 15', 'Mar 25', 'Apr 21', 'Apr 30'] #''Sep 21', Oct 27' ]#'Sep 3', 'Oct 27' ]
           ha: right
           rotation: 45
     call:

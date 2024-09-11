@@ -57,13 +57,13 @@
           alpha: 0.2
           zorder: -1
           xmin: 202
-          xmax: 244 #200 #182
+          xmax: 233 #200 #182
           lw: 0
         - function: [ matplotlib.pyplot, axvspan ]
           color: !dag_result c_pink
           alpha: 0.2
           zorder: -1
-          xmin: 244
+          xmin: 233
           xmax: 254 #200 #182
           lw: 0
         - function: [ matplotlib.pyplot, axvspan ]
@@ -78,14 +78,35 @@
           alpha: 0.2
           zorder: -1
           xmin: 271
-          xmax: 292 #200 #182
+          xmax: 349 #200 #182
+          lw: 0
+        - function: [ matplotlib.pyplot, axvspan ]
+          color: !dag_result c_pink
+          alpha: 0.2
+          zorder: -1
+          xmin: 349
+          xmax: 387 #200 #182
+          lw: 0
+        - function: [ matplotlib.pyplot, axvspan ]
+          color: !dag_result c_pink
+          alpha: 0.2
+          zorder: -1
+          xmin: 387
+          xmax: 405 #200 #182
+          lw: 0
+        - function: [ matplotlib.pyplot, axvspan ]
+          color: !dag_result c_pink
+          alpha: 0.2
+          zorder: -1
+          xmin: 405
+          xmax: 423 #200 #182
           lw: 0
         - function: [ matplotlib.pyplot, axvspan ]
           color: !dag_result c_darkblue
           alpha: 0.1
           zorder: -1
-          xmin: 292 #200
-          xmax: 304 #238
+          xmin: 423 #200
+          xmax: 453 #238
           lw: 0
     set_hv_lines:
       vlines:
@@ -124,7 +145,7 @@
           c: !dag_result c_darkgrey
           lw: 0.5
           zorder: -1
-        - pos: 244
+        - pos: 233
           linestyle: dotted
           c: !dag_result c_darkgrey
           lw: 0.5
@@ -138,7 +159,22 @@
           c: !dag_result c_darkgrey
           lw: 0.5
           zorder: -1
-        - pos: 292
+        - pos: 349
+          linestyle: dotted
+          c: !dag_result c_darkgrey
+          lw: 0.5
+          zorder: -1
+        - pos: 387
+          linestyle: dotted
+          c: !dag_result c_darkgrey
+          lw: 0.5
+          zorder: -1
+        - pos: 405
+          linestyle: dotted
+          c: !dag_result c_darkgrey
+          lw: 0.5
+          zorder: -1
+        - pos: 423
           linestyle: solid
           c: !dag_result c_darkgrey
           lw: 0.5
@@ -336,8 +372,11 @@ true_data:
     set_ticks:
       x:
         major:
-          locs: ['2020-03-03', '2020-03-13', '2020-03-22','2020-05-06', '2020-06-15', '2020-09-03', '2020-09-21','2020-10-29', '2020-11-22', '2020-12-12', '2020-12-30'] # '2020-09-21','2020-10-27']#'2020-09-03', '2020-10-27']
-          labels: [ 'Mar 3', '', 'Mar 13–22', 'May 6', 'Jun 15','Sep 3','Sep 21', 'Oct 29', 'Nov 22', 'Dec 12', 'Dec 30'] #  'Sep 21', 'Oct 27']#'Sep 3', 'Oct 27']
+          locs: ['2020-03-03', '2020-03-13', '2020-03-22','2020-05-06', '2020-06-15', '2020-09-03', '2020-09-21',
+                 '2020-10-22', '2020-11-12', '2020-11-29', '2021-02-15', '2021-03-25', '2021-04-12',
+                 '2021-04-30', '2021-05-30'] # '2020-09-21','2020-10-27']#'2020-09-03', '2020-10-27']
+          labels: [ 'Mar 3', '', 'Mar 13–22', 'May 6', 'Jun 15','Sep 3','Sep 21',
+                    'Oct 22', 'Nov 12', 'Nov 29', 'Dec 15', 'Mar 25', 'Apr 21', 'Apr 30', 'May 30'] #  'Sep 21', 'Oct 27']#'Sep 3', 'Oct 27']
           rotation: 45
     call:
       functions:
@@ -410,28 +449,49 @@ true_data:
           alpha: 0.2
           zorder: -1
           xmin: '2020-09-21'
-          xmax: '2020-10-29'#'2020-09-03'
+          xmax: '2020-10-22'#'2020-09-03'
           lw: 0
         - function: [ matplotlib.pyplot, axvspan ]
           color: !dag_result c_pink
           alpha: 0.2
           zorder: -1
-          xmin: '2020-10-29'
-          xmax: '2020-11-22'#'2020-09-03'
+          xmin: '2020-10-22'
+          xmax: '2020-11-29'#'2020-09-03'
           lw: 0
         - function: [ matplotlib.pyplot, axvspan ]
           color: !dag_result c_pink
           alpha: 0.2
           zorder: -1
-          xmin: '2020-11-22'
-          xmax: '2020-12-12'#'2020-09-03'
+          xmin: '2020-11-29'
+          xmax: '2021-02-15'#'2020-09-03'
+          lw: 0
+        - function: [ matplotlib.pyplot, axvspan ]
+          color: !dag_result c_pink
+          alpha: 0.2
+          zorder: -1
+          xmin: '2021-02-15'
+          xmax: '2021-03-25'#'2020-09-03'
+          lw: 0
+        - function: [ matplotlib.pyplot, axvspan ]
+          color: !dag_result c_pink
+          alpha: 0.2
+          zorder: -1
+          xmin: '2021-03-25'
+          xmax: '2021-04-12'#'2020-09-03'
+          lw: 0
+        - function: [ matplotlib.pyplot, axvspan ]
+          color: !dag_result c_pink
+          alpha: 0.2
+          zorder: -1
+          xmin: '2021-04-12'
+          xmax: '2021-04-30'#'2020-09-03'
           lw: 0
         - function: [ matplotlib.pyplot, axvspan ]
           color: !dag_result c_lightblue
           alpha: 0.2
           zorder: -1
-          xmin: '2020-12-12'#'2020-09-03'
-          xmax: '2020-12-30'
+          xmin: '2021-04-30'#'2020-09-03'
+          xmax: '2021-05-30'
           lw: 0
 
 # Plot the loss over time

@@ -66,7 +66,7 @@ def plot_prob_density(
             if show_modes: ###### Added this line
                 mode_x, mode_y = _x[_y.argmax()], np.max(_y) ###### Added this line
                 hlpr.ax.scatter(mode_x, mode_y, label="Mode", **plot_kwargs) ###### Added this line
-                hlpr.ax.text(mode_x, mode_y, f"{mode_y:.4f}", fontsize=9, ha='right') ###### Added this line
+                hlpr.ax.text(mode_x, mode_y, f"{mode_x:.4f}", fontsize=9, ha='right') ###### Added this line
             return ebar
 
         # Else, plot errorbands
@@ -96,7 +96,7 @@ def plot_prob_density(
             if show_modes:
                 mode_x, mode_y = _x[_y.argmax()], np.max(_y)
                 hlpr.ax.scatter(mode_x, mode_y, label="Mode", **plot_kwargs)
-                hlpr.ax.text(mode_x, mode_y, f"{mode_y:.4f}", fontsize=9, ha='right')
+                hlpr.ax.text(mode_x, mode_y, f"{mode_x:.4f}", fontsize=9, ha='right')
             return handle
 
     # Get the dataset and parameter name

@@ -65,7 +65,7 @@ def _calculate_residuals(da: xr.DataArray) -> xr.DataArray:
 
 
 @is_operation("Covid_densities_residuals")
-def print_residuals(data, train_cut: int = 200):
+def print_residuals(data, train_cut: int = 423) # 200): # was 200 before
     """Prints a summary of the residuals for each compartment"""
 
     residuals = _calculate_residuals(data) ** 2

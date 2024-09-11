@@ -4,8 +4,8 @@
     set_ticks:
       x:
         major:
-          locs: [ 0, 10, 19, 64, 104, 182, 200, 242, 266, 286] # 200, 238] #182, 238 ]
-          labels: ['Mar 3', '', 'Mar 13–22', 'May 6', 'June 15', 'Sep 3','Sep 21', 'Oct 29', 'Nov 22', 'Dec 12'] #''Sep 21', Oct 27' ]#'Sep 3', 'Oct 27' ]
+          locs: [ 0, 10, 19, 64, 104, 182, 202, 244, 254, 271, 292] # 200, 238] #182, 238 ]
+          labels: ['Mar 3', '', 'Mar 13–22', 'May 6', 'June 15', 'Sep 3', '', 'Nov 2-12', 'Nov 29', 'Dec 20'] #''Sep 21', Oct 27' ]#'Sep 3', 'Oct 27' ]
           ha: right
           rotation: 45
     call:
@@ -43,41 +43,48 @@
           alpha: 0.2
           zorder: -1
           xmin: 104
-          xmax: 182
+          xmax: 184
           lw: 0
         - function: [ matplotlib.pyplot, axvspan ]
           color: !dag_result c_pink
           alpha: 0.2
           zorder: -1
-          xmin: 182
-          xmax: 200 #200 #182
+          xmin: 184
+          xmax: 202 #200 #182
           lw: 0
         - function: [ matplotlib.pyplot, axvspan ]
           color: !dag_result c_pink
           alpha: 0.2
           zorder: -1
-          xmin: 200
-          xmax: 242 #200 #182
+          xmin: 202
+          xmax: 244 #200 #182
           lw: 0
         - function: [ matplotlib.pyplot, axvspan ]
           color: !dag_result c_pink
           alpha: 0.2
           zorder: -1
-          xmin: 242
-          xmax: 266 #200 #182
+          xmin: 244
+          xmax: 254 #200 #182
           lw: 0
         - function: [ matplotlib.pyplot, axvspan ]
           color: !dag_result c_pink
           alpha: 0.2
           zorder: -1
-          xmin: 266
-          xmax: 286 #200 #182
+          xmin: 254
+          xmax: 271 #200 #182
+          lw: 0
+        - function: [ matplotlib.pyplot, axvspan ]
+          color: !dag_result c_pink
+          alpha: 0.2
+          zorder: -1
+          xmin: 271
+          xmax: 292 #200 #182
           lw: 0
         - function: [ matplotlib.pyplot, axvspan ]
           color: !dag_result c_darkblue
           alpha: 0.1
           zorder: -1
-          xmin: 286 #200
+          xmin: 292 #200
           xmax: 304 #238
           lw: 0
     set_hv_lines:
@@ -102,7 +109,7 @@
           c: !dag_result c_darkgrey
           lw: 0.5
           zorder: -1
-        - pos: 182
+        - pos: 184
           linestyle: dotted
           c: !dag_result c_darkgrey
           lw: 0.5
@@ -112,22 +119,26 @@
 #          c: !dag_result c_darkgrey
 #          lw: 0.5
 #          zorder: -1
-        - pos: 200
+        - pos: 202
           linestyle: dotted
           c: !dag_result c_darkgrey
           lw: 0.5
           zorder: -1
-        - pos: 242
+        - pos: 244
           linestyle: dotted
           c: !dag_result c_darkgrey
           lw: 0.5
           zorder: -1
-        - pos: 266
+        - pos: 254
+          linestyle: dotted
+          c: !dag_result c_darkgrey
+          lw: 0.5
+        - pos: 271
           linestyle: dotted
           c: !dag_result c_darkgrey
           lw: 0.5
           zorder: -1
-        - pos: 286
+        - pos: 292
           linestyle: solid
           c: !dag_result c_darkgrey
           lw: 0.5

@@ -18,13 +18,14 @@ parameter_space:
           - [ 19, 64 ] # Mar 22 to May 6
           - [ 64, 104 ] # May 6 to June 15
           - [ 104, 184 ] # June 15 to Sep 3
-          - [ 184, ~ ] # Sep 3 to Sep 21
+          - [ 184, 202 ] # Sep 3 to Sep 21
+          - [ 202, 242 ] # Sep 3 to Sep 21
 
 #[0, 10, 19, 64, 104, 182, 242, 266, 286, 292, 302, 454] #[ 0, 26, 35, 80, 120, 200, 254 ]
 #          labels: [ 'Mar 3', '', 'Mar 13–22', 'May 6', 'June 15', 'Sep 3', 'Nov 2', 'Nov 26', '', 'Dec 16-22', 'Jan 1', 'May 30' ]
       synthetic_data:
         dt: 0.1
-      training_data_size: !slice [0, 202] # you had 200] #182]
+      training_data_size: !slice [0, 242] # you had 200] #182]
     NeuralNet:
       num_layers: 3
       nodes_per_layer:

@@ -17,16 +17,22 @@ parameter_space:
           - [ 10, 19] # Mar 13 to Mar 22
           - [ 19, 64 ] # Mar 22 to May 6
           - [ 64, 104 ] # May 6 to June 15
-          - [ 104, 182 ] # June 15 to Sep 3
-          - [ 182, 200 ]
-          - [ 200, 242 ] # Sep 3 to Oct 29 # this is where you stopped I think, you had 182, ~
-          - [ 242, 266 ] # Oct 29 to Nov 22
-          - [ 266, ~ ] # Nov 22 to Dec 12
+          - [ 104, 184 ] # June 15 to Sep 3
+          - [ 184, 202 ] # Sep 3 to Sep 21
+          - [ 202, 233 ] # Sep 21 to Oct 22 # this is where you stopped I think, you had 182, ~
+          - [ 233, 244 ] # Oct 22 to Nov 2
+          - [ 244, 254 ] # Nov 2 to Nov 12
+          - [ 254, 271 ] # Nov 12 to Dec Nov 29
+          - [ 271, 349 ] # Nov 29 to Dec 20
+          - [ 349, 387 ] #
+          - [ 387, 405 ] #
+          - [ 405, ~ ]
+
 #[0, 10, 19, 64, 104, 182, 242, 266, 286, 292, 302, 454] #[ 0, 26, 35, 80, 120, 200, 254 ]
 #          labels: [ 'Mar 3', '', 'Mar 13–22', 'May 6', 'June 15', 'Sep 3', 'Nov 2', 'Nov 26', '', 'Dec 16-22', 'Jan 1', 'May 30' ]
       synthetic_data:
         dt: 0.1
-      training_data_size: !slice [0, 286] # you had 200] #182]
+      training_data_size: !slice [0, 423] # you had 200] #182]
     NeuralNet:
       num_layers: 3
       nodes_per_layer:
@@ -38,7 +44,7 @@ parameter_space:
       learning_rate: 0.002
       optimizer: Adam
     Training:
-      batch_size: 286
+      batch_size: 423 # was 200 before
       Berlin_data_loss: True
       loss_function:
         name: MSELoss

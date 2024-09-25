@@ -10,7 +10,7 @@ parameter_space:
   write_every: 10
   Covid_lessdat:
     Data:
-      load_from_dir: data/Covid_lessdat/Berlin_data/data_2003_2010.csv
+      load_from_dir: data/Covid_lessdat/Berlin_data/data_2003_2009.csv
       time_dependent_parameters:
         k_E:
           - [ 0, 10 ] # Feb 16 to Mar 13 #[ 0, 10, 19, 64, 104, 182, 238 ]
@@ -19,7 +19,7 @@ parameter_space:
           - [ 64, 104 ] # May 6 to June 15
           - [ 104, 184 ] # June 15 to Sep 3
           - [ 184, 202 ] # Sep 3 to Sep 21
-          - [ 202, ~ ] # Sep 3 to Sep 21
+          - [ 202, ~ ] # Sep 21 to Sep 30
 #[0, 10, 19, 64, 104, 182, 242, 266, 286, 292, 302, 454] #[ 0, 26, 35, 80, 120, 200, 254 ]
 #          labels: [ 'Mar 3', '', 'Mar 13–22', 'May 6', 'June 15', 'Sep 3', 'Nov 2', 'Nov 26', '', 'Dec 16-22', 'Jan 1', 'May 30' ]
       synthetic_data:

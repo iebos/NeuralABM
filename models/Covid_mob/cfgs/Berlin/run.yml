@@ -4,8 +4,8 @@ perform_sweep: True
 parameter_space:
   seed: !sweep
     default: 30
-    range: [5]
-  num_epochs: 20
+    range: [20]
+  num_epochs: 200
   write_start: 1
   write_every: 10
   Covid_mob:
@@ -14,10 +14,10 @@ parameter_space:
 #      time_dependent_parameters:
       synthetic_data:
         dt: 0.1
-      training_data_size: !slice [0, 200] #182]
+      training_data_size: !slice [0, 238] #182]
     Data_weathermob:
       load_from_dir: data/Covid_mob/Berlin_data/weather_mobility.csv
-      training_data_size: !slice [ 0, 200 ] #182]
+      training_data_size: !slice [ 0, 238 ] #182]
     NeuralNet:
       num_layers: 3
       nodes_per_layer:

@@ -50,11 +50,16 @@ def generate_smooth_data(
         if parameters is None
         else parameters[Compartments.susceptible.value]
     )
-    # k_E = (
-    #     torch.tensor(cfg["k_E"], dtype=torch.float)
-    #     if parameters is None
-    #     else parameters[Compartments.exposed.value]
-    # )
+    k_E = (
+        torch.tensor(cfg["k_E"], dtype=torch.float)
+        if parameters is None
+        else parameters[Compartments.exposed.value]
+    )
+    k_W = (
+        torch.tensor(cfg["k_W"], dtype=torch.float)
+        if parameters is None
+        else parameters[Compartments.exposed.value]
+    )
     k_I = (
         torch.tensor(cfg["k_I"], dtype=torch.float)
         if parameters is None
@@ -91,22 +96,19 @@ def generate_smooth_data(
         else parameters[Compartments.contact_traced.value]
     )
 
-    if parameters is None:
-        k_E0 = torch.tensor(cfg["k_E0"], dtype=torch.float)
-        k_E1 = torch.tensor(cfg["k_E1"], dtype=torch.float)
-        k_E2 = torch.tensor(cfg["k_E2"], dtype=torch.float)
-    else:
-        k_E = parameters[Compartments.exposed.value]
+
 
 
     # Solve the ODE
     for t in range(1, num_steps + burn_in):
         # Get the time-dependent parameters, if given
         k_S_t = k_S[t] if k_S.dim() > 0 else k_S
-        if parameters is None:
-            k_E_t = k_E0[t] + k_E1[t] * weathermob_data[t - 1][0]**2 + k_E2[t] * weathermob_data[t - 1][0]**2 * weathermob_data[t - 1][1] if k_E0.dim() > 0 else k_E0 + k_E1 * weathermob_data[t - 1][0]**2 + k_E2 * weathermob_data[t - 1][0]**2 * weathermob_data[t - 1][1]
-        else:
-            k_E_t = k_E[t] if k_E.dim() > 0 else k_E
+        k_E_t = k_E[t] if k_E.dim() > 0 else k_E
+        k_W_t = k_W[t] if k_W.dim() > 0 else k_W
+        # if parameters is None:
+        #     k_E_t = k_E0[t] + k_E1[t] * weathermob_data[t - 1][0]**2 + k_E2[t] * weathermob_data[t - 1][0]**2 * weathermob_data[t - 1][1] if k_E0.dim() > 0 else k_E0 + k_E1 * weathermob_data[t - 1][0]**2 + k_E2 * weathermob_data[t - 1][0]**2 * weathermob_data[t - 1][1]
+        # else:
+        #     k_E_t = k_E[t] if k_E.dim() > 0 else k_E
         #k_E_t =  k_E[t] * weathermob_data[t - 1][0]**2 - k_E[t] * weathermob_data[t - 1][0]**2 * weathermob_data[t - 1][1] if k_E.dim() > 0 else  k_E * weathermob_data[t - 1][0]**2 - k_E * weathermob_data[t - 1][0]**2 * weathermob_data[t - 1][1]
         k_I_t = k_I[t] if k_I.dim() > 0 else k_I
         k_R_t = k_R[t] if k_R.dim() > 0 else k_R
@@ -116,10 +118,12 @@ def generate_smooth_data(
         k_D_t = k_D[t] if k_D.dim() > 0 else k_D
         k_CT_t = k_CT[t] if k_CT.dim() > 0 else k_CT
 
-     #   k_E_t = (k_E0[t] + k_E1[t] * weathermob_data[t - 1][0]**2 + k_E2[t] * weathermob_data[t - 1][0]**2 *
-     #            weathermob_data[t - 1][1]) if k_E0.dim() > 0 else k_E
-        print("k_E_t is equaaaaal tooooo", k_E_t)
+     # #   k_E_t = (k_E0[t] + k_E1[t] * weathermob_data[t - 1][0]**2 + k_E2[t] * weathermob_data[t - 1][0]**2 *
+     # #            weathermob_data[t - 1][1]) if k_E0.dim() > 0 else k_E
+     #    print("k_E_t is equaaaaal tooooo", k_E_t)
 
+        k_E_t = k_E_t * weathermob_data[t - 1][0]
+        k_W_t = k_W_t * weathermob_data[t - 1][1]
         # Calculate k_Q
         k_Q_t = k_q * k_CT_t * data[t - 1][Compartments.contact_traced.value]
 
@@ -127,11 +131,13 @@ def generate_smooth_data(
             [
                 (-k_E_t * data[t - 1][Compartments.infected.value] - k_Q_t)
                 * data[t - 1][Compartments.susceptible.value]
-                + k_S_t * data[t - 1][Compartments.quarantine_S.value],
+                + k_S_t * data[t - 1][Compartments.quarantine_S.value]
+                + k_W_t * data[t - 1][Compartments.exposed.value],
                 k_E_t
                 * data[t - 1][Compartments.susceptible.value]
                 * data[t - 1][Compartments.infected.value]
-                - (k_I_t + k_Q_t) * data[t - 1][Compartments.exposed.value],
+                - (k_I_t + k_Q_t) * data[t - 1][Compartments.exposed.value]
+                - k_W_t * data[t - 1][Compartments.exposed.value],
                 k_I_t * data[t - 1][Compartments.exposed.value]
                 - (k_R_t + k_SY_t + k_Q_t) * data[t - 1][Compartments.infected.value],
                 k_R_t

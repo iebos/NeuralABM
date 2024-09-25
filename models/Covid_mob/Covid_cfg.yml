@@ -3,10 +3,11 @@ Data:
 
     # ODE model parameters
     k_S: 0.4
-#    k_E: 0.01
-    k_E0:  0.01
-    k_E1:  0.01
-    k_E2:  0.01
+    k_E: 0.01
+    k_W: 0.01
+#    k_E0:  0.01
+#    k_E1:  0.01
+#    k_E2:  0.01
     k_I:  1.0
     k_R: 0.8
     k_SY:  0.5
@@ -18,7 +19,7 @@ Data:
     k_Q: 1.2
 
     # Number of steps to run
-    num_steps: 200
+    num_steps: 238
 
     # Discard an initialisation period
     burn_in: 10
@@ -44,6 +45,6 @@ Training:
     name: MSELoss
     kwargs:
       reduction: sum
-  to_learn: [ k_S, k_E0, k_E1, k_E2, k_I, k_R, k_SY, k_H, k_C, k_D, k_CT] #k_E
+  to_learn: [ k_S, k_E, k_W, k_I, k_R, k_SY, k_H, k_C, k_D, k_CT] #k_E
   device: cpu
   num_threads: ~

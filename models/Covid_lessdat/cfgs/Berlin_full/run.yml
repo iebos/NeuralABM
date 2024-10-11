@@ -1,0 +1,55 @@
+paths:
+  model_note: Berlin
+perform_sweep: True
+parameter_space:
+  seed: !sweep
+    default: 20
+    range: [12]
+  num_epochs: 5000
+  write_start: 1
+  write_every: 10
+  Covid_lessdat:
+    Data:
+      load_from_dir: data/Covid_lessdat/Berlin_data/data.csv
+      time_dependent_parameters:
+        k_E:
+          - [ 0, 10 ] # Feb 16 to Mar 13 #[ 0, 10, 19, 64, 104, 182, 238 ]
+          - [ 10, 19] # Mar 13 to Mar 22
+          - [ 19, 64 ] # Mar 22 to May 6
+          - [ 64, 104 ] # May 6 to June 15
+          - [ 104, 184 ] # June 15 to Sep 3
+          - [ 184, 202 ] # Sep 3 to Sep 21
+          - [ 202, 211 ] # Sep 21 to Sep 30
+          - [ 211, 238 ] # Oct 1 to Oct 27
+          - [ 238, 249 ] # Oct 27 to Nov 07
+          - [ 249, 271 ] # Nov 07 to Nov 29
+          - [ 271, 292 ] # Nov 29 to Dec 20
+          - [ 292, 306 ] # Dec 20 to Jan 03
+          - [ 306, 313 ] # Jan 03 to Jan 10
+          - [ 313, 349 ] # Jan 10 to Feb 15
+          - [ 349, 362 ] # Feb 15 to Feb 28
+          - [ 362, 386 ] # Mar 1 to Mar 25
+          - [ 386, 404 ] # Mar 25 to Apr 12
+          - [ 404, ~ ] # Apr 12 to May 30
+#[0, 10, 19, 64, 104, 182, 242, 266, 286, 292, 302, 454] #[ 0, 26, 35, 80, 120, 200, 254 ]
+#          labels: [ 'Mar 3', '', 'Mar 13–22', 'May 6', 'June 15', 'Sep 3', 'Nov 2', 'Nov 26', '', 'Dec 16-22', 'Jan 1', 'May 30' ]
+      synthetic_data:
+        dt: 0.1
+      training_data_size: !slice [0, 453] # you had 200] #182]
+    NeuralNet:
+      num_layers: 3
+      nodes_per_layer:
+        default: 20
+      activation_funcs:
+        default: sigmoid
+        layer_specific:
+          -1: abs
+      learning_rate: 0.002
+      optimizer: Adam
+    Training:
+      batch_size: 151
+      Berlin_data_loss: True
+      loss_function:
+        name: MSELoss
+        kwargs:
+          reduction: none # Do not sum over k

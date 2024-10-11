@@ -4,7 +4,7 @@ Data:
     # ODE model parameters
     k_S: 0.4
     k_E: 0.01
-    k_W: 0.01
+#    k_W: 0.01
 #    k_E0:  0.01
 #    k_E1:  0.01
 #    k_E2:  0.01
@@ -19,7 +19,7 @@ Data:
     k_Q: 1.2
 
     # Number of steps to run
-    num_steps: 238
+    num_steps: 253
 
     # Discard an initialisation period
     burn_in: 10
@@ -40,11 +40,11 @@ NeuralNet:
   learning_rate: !is-positive 0.002
 
 Training:
-  batch_size: !is-positive-int 200
+  batch_size: !is-positive-int 246
   loss_function:
     name: MSELoss
     kwargs:
       reduction: sum
-  to_learn: [ k_S, k_E, k_W, k_I, k_R, k_SY, k_H, k_C, k_D, k_CT] #k_E
+  to_learn: [ k_S, k_E, k_I, k_R, k_SY, k_H, k_C, k_D, k_CT] # k_E #k_E
   device: cpu
   num_threads: ~

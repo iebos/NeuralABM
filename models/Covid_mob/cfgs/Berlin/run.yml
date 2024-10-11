@@ -4,7 +4,7 @@ perform_sweep: True
 parameter_space:
   seed: !sweep
     default: 30
-    range: [20]
+    range: [5]
   num_epochs: 200
   write_start: 1
   write_every: 10
@@ -14,10 +14,10 @@ parameter_space:
 #      time_dependent_parameters:
       synthetic_data:
         dt: 0.1
-      training_data_size: !slice [0, 238] #182]
+      training_data_size: !slice [0, 246] #182]
     Data_weathermob:
       load_from_dir: data/Covid_mob/Berlin_data/weather_mobility.csv
-      training_data_size: !slice [ 0, 238 ] #182]
+      training_data_size: !slice [ 0, 246 ] #182]
     NeuralNet:
       num_layers: 3
       nodes_per_layer:
@@ -29,7 +29,7 @@ parameter_space:
       learning_rate: 0.002
       optimizer: Adam
     Training:
-      batch_size: 200
+      batch_size: 246
       Berlin_data_loss: True
       loss_function:
         name: MSELoss

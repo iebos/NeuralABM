@@ -158,7 +158,7 @@ class Covid_NN:
             torch.cat([alpha[0:8], torch.sum(alpha[8:12], 0, keepdim=True)], 0)
         ) ** (-1)
 
-        # Reduced data model
+ #       Reduced data model
         for idx in [0, 1, 3, 4, 5, 6, 7, 8]:  # E, R, Sy, H, C, qS, qE, qI are dropped
             self.alpha[idx] = 0
 
@@ -230,8 +230,8 @@ class Covid_NN:
              #   print("k_Q is equaaaaal tooooo", k_Q)
 
                 # Calculate the k_E parameter from weather and mobility data
-                k_E = parameters["k_E"] * self.weathermob_data[ele][0]
-                k_W = parameters["k_W"] * self.weathermob_data[ele][1]
+                k_E = parameters["k_E"] * (self.weathermob_data[ele][0]) * (abs(self.weathermob_data[ele][1]))
+                #k_W = parameters["k_W"] * self.weathermob_data[ele][1]
              #   k_E = parameters["k_E"] * self.weathermob_data[ele][0]**2 - parameters["k_E"] * self.weathermob_data[ele][0]**2 * self.weathermob_data[ele][1]
               #  print("k_E is equaaaaal tooooo", k_E)
                 # Solve the ODE
@@ -242,11 +242,11 @@ class Covid_NN:
                             [
                                 (-k_E * densities[-1][2] - k_Q)
                                 * densities[-1][0]
-                                + parameters["k_S"] * densities[-1][8]
-                                + k_W * densities[-1][1],
+                                + parameters["k_S"] * densities[-1][8], #
+                                # + k_W * densities[-1][1],
                                 k_E * densities[-1][0] * densities[-1][2]
-                                - (parameters["k_I"] + k_Q) * densities[-1][1]
-                                - k_W * densities[-1][1],
+                                - (parameters["k_I"] + k_Q) * densities[-1][1], #
+                                # - k_W * densities[-1][1],
                                 parameters["k_I"] * densities[-1][1]
                                 - (parameters["k_R"] + parameters["k_SY"] + k_Q)
                                 * densities[-1][2],

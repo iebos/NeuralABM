@@ -155,7 +155,7 @@ class Covid_NN:
         ) ** (-1)
 
         # Reduced data model
-        for idx in [3, 4, 5, 6, 7, 8]:  # E, R, Sy, H, C, qS, qE, qI are dropped
+        for idx in [1, 3, 4, 5, 6, 7, 8]:  # E, R, Sy, H, C, qS, qE, qI are dropped
             self.alpha[idx] = 0
 
         # Get all the jump points
@@ -304,57 +304,53 @@ class Covid_NN:
             if self.Berlin_data_loss:
                 # For the Berlin dataset, combine the quarantine compartments and drop the deceased compartment,
                 # which is not present in the ABM data
-                # densities = torch.cat(
-                #     [
-                #         densities[:, :8],
-                #         torch.sum(densities[:, 8:12], dim=1, keepdim=True),
-                #     ],
-                #     dim=1,
-                # )
-                # loss = (
-                #     self.alpha
-                #     * self.loss_function(
-                #         densities,
-                #         torch.cat(
-                #             [
-                #                 self.training_data[
-                #                     batch_idx + 1 : self.batches[batch_no + 1] + 1, :8
-                #                 ],
-                #                 self.training_data[
-                #                     batch_idx + 1 : self.batches[batch_no + 1] + 1, [8]
-                #                 ],
-                #             ],
-                #             1,
-                #         ),
-                #     ).sum(dim=0)
-                # ).sum()
-                new_infections_full = torch.cat(
+                densities = torch.cat(
                     [
-                        new_infections_full[:, :8],
-                        torch.sum(new_infections_full[:, 8:12], dim=1, keepdim=True),
+                        densities[:, :8],
+                        torch.sum(densities[:, 8:12], dim=1, keepdim=True),
                     ],
                     dim=1,
                 )
                 loss = (
-                    self.alpha * self.loss_function(
-                        new_infections_full,
-                            torch.cat(
-                                [
-                                    self.training_data[
-                                        batch_idx + 1 : self.batches[batch_no + 1] + 1, :8
-                                    ],
-                                    self.training_data[
-                                        batch_idx + 1 : self.batches[batch_no + 1] + 1, [8]
-                                    ],
+                    self.alpha
+                    * self.loss_function(
+                        densities,
+                        torch.cat(
+                            [
+                                self.training_data[
+                                    batch_idx + 1 : self.batches[batch_no + 1] + 1, :8
                                 ],
-                                1,
-                            ),
+                                self.training_data[
+                                    batch_idx + 1 : self.batches[batch_no + 1] + 1, [8]
+                                ],
+                            ],
+                            1,
+                        ),
                     ).sum(dim=0)
                 ).sum()
-                # loss = self.loss_function(
-                #     new_infections,
-                #     self.training_data[batch_idx + 1: self.batches[batch_no + 1] + 1, 0],
-                # ).sum(dim=0).sum()
+                # new_infections_full = torch.cat(
+                #     [
+                #         new_infections_full[:, :8],
+                #         torch.sum(new_infections_full[:, 8:12], dim=1, keepdim=True),
+                #     ],
+                #     dim=1,
+                # )
+                # loss = (
+                #     self.alpha * self.loss_function(
+                #         new_infections_full,
+                #             torch.cat(
+                #                 [
+                #                     self.training_data[
+                #                         batch_idx + 1 : self.batches[batch_no + 1] + 1, :8
+                #                     ],
+                #                     self.training_data[
+                #                         batch_idx + 1 : self.batches[batch_no + 1] + 1, [8]
+                #                     ],
+                #                 ],
+                #                 1,
+                #             ),
+                #     ).sum(dim=0)
+                # ).sum()
 
             # Regular loss function
             else:

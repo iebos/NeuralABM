@@ -155,7 +155,7 @@ class Covid_NN:
         ) ** (-1)
 
         # Reduced data model
-        for idx in [1, 3, 4, 5, 6, 7, 8]:  # E, R, Sy, H, C, qS, qE, qI are dropped
+        for idx in [0, 1, 3, 4, 5, 6, 7, 8]:  # E, R, Sy, H, C, qS, qE, qI are dropped
             self.alpha[idx] = 0
 
         # Get all the jump points
@@ -208,7 +208,7 @@ class Covid_NN:
             current_densities = self.training_data[batch_idx].clone()
             current_densities.requires_grad_(True)
             densities = [current_densities]
-
+            new_infections = []
             # Integrate the ODE for B steps
             for ele in range(batch_idx + 1, self.batches[batch_no + 1] + 1):
                 # Adjust for time-dependency
@@ -223,6 +223,10 @@ class Covid_NN:
                 # Calculate the k_Q parameter from the current CT figures and k_CT estimate
                 k_Q = self.k_q * parameters["k_CT"] * densities[-1][-1]
 
+                # Calculate new infections per day
+                new_infection = parameters["k_E"] * densities[-1][0] * densities[-1][2]
+                new_infections.append(new_infection)
+
                 # Solve the ODE
                 densities.append(
                     torch.clip(
@@ -234,7 +238,7 @@ class Covid_NN:
                                 + parameters["k_S"] * densities[-1][8],
 
                                 parameters["k_E"] * densities[-1][0] * densities[-1][2]
-                                - (parameters["k_I"] + k_Q) * densities[-1][1],
+                                - (parameters["k_I"] + k_Q) * densities[-1][1], #this part is different in the equations in the paper (there it is k_e*I, not k_I*I), but the same in wulkows paper, so I assume they mixed up I and E in the gaskin paper
 
                                 parameters["k_I"] * densities[-1][1]
                                 - (parameters["k_R"] + parameters["k_SY"] + k_Q)
@@ -289,34 +293,66 @@ class Covid_NN:
 
             # Discard the initial condition
             densities = torch.stack(densities[1:])
+            new_infections = torch.stack(new_infections)
+
+            # Make new_infections the same shape as densities
+            new_infections_full = torch.zeros_like(densities)
+            new_infections_full[:, 2] = new_infections
 
             if self.Berlin_data_loss:
                 # For the Berlin dataset, combine the quarantine compartments and drop the deceased compartment,
                 # which is not present in the ABM data
-                densities = torch.cat(
+                # densities = torch.cat(
+                #     [
+                #         densities[:, :8],
+                #         torch.sum(densities[:, 8:12], dim=1, keepdim=True),
+                #     ],
+                #     dim=1,
+                # )
+                # loss = (
+                #     self.alpha
+                #     * self.loss_function(
+                #         densities,
+                #         torch.cat(
+                #             [
+                #                 self.training_data[
+                #                     batch_idx + 1 : self.batches[batch_no + 1] + 1, :8
+                #                 ],
+                #                 self.training_data[
+                #                     batch_idx + 1 : self.batches[batch_no + 1] + 1, [8]
+                #                 ],
+                #             ],
+                #             1,
+                #         ),
+                #     ).sum(dim=0)
+                # ).sum()
+                new_infections_full = torch.cat(
                     [
-                        densities[:, :8],
-                        torch.sum(densities[:, 8:12], dim=1, keepdim=True),
+                        new_infections_full[:, :8],
+                        torch.sum(new_infections_full[:, 8:12], dim=1, keepdim=True),
                     ],
                     dim=1,
                 )
                 loss = (
-                    self.alpha
-                    * self.loss_function(
-                        densities,
-                        torch.cat(
-                            [
-                                self.training_data[
-                                    batch_idx + 1 : self.batches[batch_no + 1] + 1, :8
+                    self.alpha * self.loss_function(
+                        new_infections_full,
+                            torch.cat(
+                                [
+                                    self.training_data[
+                                        batch_idx + 1 : self.batches[batch_no + 1] + 1, :8
+                                    ],
+                                    self.training_data[
+                                        batch_idx + 1 : self.batches[batch_no + 1] + 1, [8]
+                                    ],
                                 ],
-                                self.training_data[
-                                    batch_idx + 1 : self.batches[batch_no + 1] + 1, [8]
-                                ],
-                            ],
-                            1,
-                        ),
+                                1,
+                            ),
                     ).sum(dim=0)
                 ).sum()
+                # loss = self.loss_function(
+                #     new_infections,
+                #     self.training_data[batch_idx + 1: self.batches[batch_no + 1] + 1, 0],
+                # ).sum(dim=0).sum()
 
             # Regular loss function
             else:

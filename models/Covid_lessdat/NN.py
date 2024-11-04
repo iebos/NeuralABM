@@ -155,7 +155,7 @@ class Covid_NN:
         ) ** (-1)
 
         # Reduced data model
-        for idx in [0, 1, 3, 4, 5, 6, 7, 8]:  # E, R, Sy, H, C, qS, qE, qI are dropped
+        for idx in [1, 3, 4, 5, 6, 7, 8]:  # E, R, Sy, H, C, qS, qE, qI are dropped
             self.alpha[idx] = 0
 
         # Get all the jump points
@@ -297,6 +297,7 @@ class Covid_NN:
 
             # Make new_infections the same shape as densities
             new_infections_full = torch.zeros_like(densities)
+            new_infections_full[:, 0] = densities[:, 0]  # Copy the first column from densities
             new_infections_full[:, 2] = new_infections
 
             if self.Berlin_data_loss:

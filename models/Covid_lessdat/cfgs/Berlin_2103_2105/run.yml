@@ -4,8 +4,8 @@ perform_sweep: True
 parameter_space:
   seed: !sweep
     default: 20
-    range: [5]
-  num_epochs: 200
+    range: [20]
+  num_epochs: 2000
   write_start: 1
   write_every: 10
   Covid_lessdat:

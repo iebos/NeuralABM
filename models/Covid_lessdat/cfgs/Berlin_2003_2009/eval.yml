@@ -102,7 +102,7 @@ densities:
     - .plot_policy_intervals
   dag_options:
     define:
-      n_samples: 10 #was 1000 before
+      n_samples: 1000 #was 1000 before
       kind: !range [8]
   select_and_combine:
     fields:

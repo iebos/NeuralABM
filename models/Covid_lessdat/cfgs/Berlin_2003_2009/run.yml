@@ -4,13 +4,13 @@ perform_sweep: True
 parameter_space:
   seed: !sweep
     default: 5
-    range: [5]
-  num_epochs: 200
+    range: [20]
+  num_epochs: 2000
   write_start: 1
   write_every: 10
   Covid_lessdat:
     Data:
-      load_from_dir: data/Covid_lessdat/Berlin_data/data_2003_2009_exposed.csv
+      load_from_dir: data/Covid_lessdat/Berlin_data/data_2003_2009.csv
       time_dependent_parameters:
         k_E:
           - [ 0, 10 ] # Feb 16 to Mar 13 #[ 0, 10, 19, 64, 104, 182, 238 ]
